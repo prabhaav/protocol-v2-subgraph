@@ -1,14 +1,88 @@
+# service entity, when we receiving an event we should wknow which pool is it
+type ContractToPoolMapping @entity {
+  # contract address
+  id: ID!
+  pool: Pool!
+}
+
 type FlashLoan @entity {
   """
   tx hash
   """ # TODO: replace with blockNumber/timestamp + blockPosition
   id: ID!
-  #pool: Pool!
-  #reserve: Reserve!
+  pool: Pool!
+  reserve: Reserve!
   target: Bytes!
   amount: BigInt!
   totalFee: BigInt!
   #protocolFee: BigInt!
-  #initiator: User!
+  initiator: User!
   timestamp: Int!
+}
+
+type User @entity {
+  """
+  user address
+  """
+  id: ID!
+  borrowedReservesCount: Int!
+
+  #incentives
+  unclaimedRewards: BigInt!
+  lifetimeRewards: BigInt!
+  incentivesLastUpdated: Int!
+}
+
+type Reserve @entity {
+  """
+  Reserve address
+  """
+  id: ID!
+  underlyingAsset: Bytes!
+  pool: Pool!
+  symbol: String!
+  name: String!
+  #uiColor: String! #TODO MOVE: move to the frontend
+  #currencyType: CurrencyType! #TODO MOVE: move to the frontend
+  decimals: Int!
+  usageAsCollateralEnabled: Boolean! # defalt false
+  borrowingEnabled: Boolean! # defalt false
+  stableBorrowRateEnabled: Boolean! # defalt false
+  isActive: Boolean! # defalt false
+  isFrozen: Boolean! # defalt false
+  availableLiquidity: BigInt! # default: 0
+  lifetimeFlashLoans: BigInt! # default: 0
+  lifetimeFlashLoanPremium: BigInt! # default: 0
+  totalATokenSupply: BigInt!
+}
+
+type Pool @entity {
+  id: ID!
+  #protocol: Protocol!
+  lendingPool: Bytes
+  lendingPoolCollateralManager: Bytes
+  lendingPoolConfiguratorImpl: Bytes
+  lendingPoolImpl: Bytes
+  lendingPoolConfigurator: Bytes
+  proxyPriceProvider: Bytes
+  lendingRateOracle: Bytes
+  configurationAdmin: Bytes
+  ethereumAddress: Bytes
+  emergencyAdmin: Bytes
+  #history: [PoolConfigurationHistoryItem!]! @derivedFrom(field: "pool")
+  lastUpdateTimestamp: Int!
+
+  active: Boolean!
+  paused: Boolean!
+}
+
+type UserReserve @entity {
+  """
+  user address + reserve address
+  """
+  id: ID!
+  pool: Pool!
+  reserve: Reserve!
+  user: User!
+  usageAsCollateralEnabledOnUser: Boolean!
 }

@@ -19,13 +19,13 @@ import {
   // Swap,
   // ReserveDataUpdated,
 } from '../../../generated/templates/LendingPool/LendingPool';
-// import {
+import {
 //   getOrInitReferrer,
-//   getOrInitReserve,
-//   getOrInitUser,
-//   getOrInitUserReserve,
+  getOrInitReserve,
+  getOrInitUser,
+  // getOrInitUserReserve,
 //   getPoolByContract,
-// } from '../../helpers/initializers';
+} from '../../helpers/initializers';
 import {
   // Borrow as BorrowAction,
   // Deposit as DepositAction,
@@ -219,24 +219,24 @@ import { EventTypeRef, getHistoryId } from '../../utils/id-generation';
 // }
 
 export function handleFlashLoan(event: FlashLoan): void {
-  // let initiator = getOrInitUser(event.params.initiator);
-  // let poolReserve = getOrInitReserve(event.params.asset, event);
+  let initiator = getOrInitUser(event.params.initiator);
+  let poolReserve = getOrInitReserve(event.params.asset, event);
 
   let premium = event.params.premium;
 
-  // poolReserve.availableLiquidity = poolReserve.availableLiquidity.plus(premium);
+  poolReserve.availableLiquidity = poolReserve.availableLiquidity.plus(premium);
 
-  // poolReserve.lifetimeFlashLoans = poolReserve.lifetimeFlashLoans.plus(event.params.amount);
-  // poolReserve.lifetimeFlashLoanPremium = poolReserve.lifetimeFlashLoanPremium.plus(premium);
-  // poolReserve.totalATokenSupply = poolReserve.totalATokenSupply.plus(premium);
+  poolReserve.lifetimeFlashLoans = poolReserve.lifetimeFlashLoans.plus(event.params.amount);
+  poolReserve.lifetimeFlashLoanPremium = poolReserve.lifetimeFlashLoanPremium.plus(premium);
+  poolReserve.totalATokenSupply = poolReserve.totalATokenSupply.plus(premium);
 
-  // poolReserve.save();
+  poolReserve.save();
 
   let flashLoan = new FlashLoanAction(getHistoryId(event, EventTypeRef.FlashLoan));
-  // flashLoan.pool = poolReserve.pool;
-  // flashLoan.reserve = poolReserve.id;
+  flashLoan.pool = poolReserve.pool;
+  flashLoan.reserve = poolReserve.id;
   flashLoan.target = event.params.target;
-  // flashLoan.initiator = initiator.id;
+  flashLoan.initiator = initiator.id;
   flashLoan.totalFee = premium;
   flashLoan.amount = event.params.amount;
   flashLoan.timestamp = event.block.timestamp.toI32();
