@@ -3,9 +3,9 @@ import { ReserveInitialized } from '../../../generated/templates/LendingPoolConf
 import { IERC20Detailed } from '../../../generated/templates/LendingPoolConfigurator/IERC20Detailed';
 import { IERC20DetailedBytes } from '../../../generated/templates/LendingPoolConfigurator/IERC20DetailedBytes';
 import {
-  AToken as ATokenContract,
+  // AToken as ATokenContract,
   StableDebtToken as STokenContract,
-  VariableDebtToken as VTokenContract,
+  // VariableDebtToken as VTokenContract,
 } from '../../../generated/templates';
 import {
   createMapContractToPool,
@@ -59,7 +59,7 @@ export function handleReserveInitialized(event: ReserveInitialized): void {
 
   updateInterestRateStrategy(reserve, event.params.interestRateStrategyAddress, true);
 
-  ATokenContract.create(event.params.aToken);
+  // ATokenContract.create(event.params.aToken);
   createMapContractToPool(event.params.aToken, reserve.pool);
   let aToken = getOrInitAToken(event.params.aToken);
   aToken.underlyingAssetAddress = reserve.underlyingAsset;
@@ -75,7 +75,7 @@ export function handleReserveInitialized(event: ReserveInitialized): void {
   sToken.pool = reserve.pool;
   sToken.save();
 
-  VTokenContract.create(event.params.variableDebtToken);
+  // VTokenContract.create(event.params.variableDebtToken);
   createMapContractToPool(event.params.variableDebtToken, reserve.pool);
   let vToken = getOrInitVToken(event.params.variableDebtToken);
   vToken.underlyingAssetAddress = reserve.underlyingAsset;

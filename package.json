@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "This package contains subgraph of the protocol v2",
   "scripts": {
+    "local-dev": "npm run prepare:all && npm run subgraph:create:local && npm run subgraph:deploy:local",
+    "local-create": "npm run subgraph:create:local",
+    "local-deploy": "npm run subgraph:deploy:local",
     "update-address": "node ./scripts/updateMigratorAddress",
     "update-abi-addresses": "npm run update-address && npm run prepare:abi",
     "prepare:all": "npm run prepare:contracts && npm run prepare:subgraph",
